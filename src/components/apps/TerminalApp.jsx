@@ -1,30 +1,20 @@
 import { useState } from "react"
-
 import Window from "../windows/Window"
-
 import useWindowStore from "../../store/useWindowStore"
-
 import useNotificationStore from "../../store/useNotificationStore"
 
 function TerminalApp() {
-
-  const { closeWindow } = useWindowStore()
-
-  const { addNotification } =
-    useNotificationStore()
+  const { closeWindow, openWindow } = useWindowStore()
+  const { addNotification } = useNotificationStore()
 
   const [input, setInput] = useState("")
 
   const [history, setHistory] = useState([
-
     "Welcome to Dharunika OS Terminal 🚀",
-
     "Type 'help' to see commands.",
-
   ])
 
   const commands = {
-
     help: `
 Available Commands:
 
@@ -34,9 +24,26 @@ projects
 github
 linkedin
 resume
-clear
-date
 whoami
+date
+clear
+
+ls
+pwd
+cd projects
+ls projects
+cat about
+cat resume
+
+open about
+open finder
+open safari
+open vscode
+open music
+open notes
+open weather
+open calendar
+open settings
 `,
 
     about: `
@@ -70,7 +77,7 @@ Projects:
 
     github: `
 GitHub:
-https://github.com
+https://github.com/DharunikaHari-98
 `,
 
     linkedin: `
@@ -84,7 +91,7 @@ Dharunika_Resume.pdf
 `,
 
     whoami: `
-dharunika@amazon-intern
+dharunika@macos-portfolio
 `,
 
     date: `
@@ -92,150 +99,177 @@ ${new Date().toString()}
 `,
   }
 
-  function runCommand(command) {
+  function runCommand(rawCommand) {
+    const command = rawCommand.trim().toLowerCase()
 
-    // EMPTY INPUT
-    if (!command.trim()) return
+    if (!command) return
 
-    // CLEAR
     if (command === "clear") {
-
       setHistory([])
 
       addNotification({
-
         title: "Terminal",
-
-        message:
-          "Terminal history cleared",
-
+        message: "Terminal history cleared",
       })
+
+      return
+    }
+
+    if (command === "ls") {
+      setHistory((prev) => [
+        ...prev,
+        `> ${rawCommand}`,
+        "about.txt  skills.txt  projects  resume.pdf",
+      ])
+      return
+    }
+
+    if (command === "pwd") {
+      setHistory((prev) => [
+        ...prev,
+        `> ${rawCommand}`,
+        "/Users/dharunika/portfolio",
+      ])
+      return
+    }
+
+    if (command === "cd projects") {
+      setHistory((prev) => [
+        ...prev,
+        `> ${rawCommand}`,
+        "Moved to /projects\nType 'ls projects' to view projects.",
+      ])
+      return
+    }
+
+    if (command === "ls projects") {
+      setHistory((prev) => [
+        ...prev,
+        `> ${rawCommand}`,
+        "AI-Women-Safety  Crime-Dashboard  Policy-Trust  macOS-Portfolio",
+      ])
+      return
+    }
+
+    if (command === "cat about") {
+      setHistory((prev) => [
+        ...prev,
+        `> ${rawCommand}`,
+        commands.about,
+      ])
+      return
+    }
+
+    if (command === "cat resume") {
+      setHistory((prev) => [
+        ...prev,
+        `> ${rawCommand}`,
+        "Resume preview will be connected soon.",
+      ])
+      return
+    }
+
+    if (command.startsWith("open ")) {
+      const appName = command.replace("open ", "").trim()
+
+      const appMap = {
+        about: "about",
+        finder: "finder",
+        terminal: "terminal",
+        safari: "safari",
+        vscode: "vscode",
+        music: "music",
+        notes: "notes",
+        weather: "weather",
+        calendar: "calendar",
+        settings: "settings",
+      }
+
+      if (appMap[appName]) {
+        openWindow(appMap[appName])
+
+        setHistory((prev) => [
+          ...prev,
+          `> ${rawCommand}`,
+          `Opening ${appName}...`,
+        ])
+
+        addNotification({
+          title: "Terminal",
+          message: `Opening ${appName}`,
+        })
+
+        return
+      }
+
+      setHistory((prev) => [
+        ...prev,
+        `> ${rawCommand}`,
+        `App not found: ${appName}`,
+      ])
 
       return
     }
 
     const result =
       commands[command] ||
-      `Command not found: ${command}`
+      `Command not found: ${rawCommand}
 
-    // UPDATE TERMINAL
+Type 'help' to see available commands.`
+
     setHistory((prev) => [
-
       ...prev,
-
-      `> ${command}`,
-
+      `> ${rawCommand}`,
       result,
-
     ])
 
-    // SHOW NOTIFICATION
     addNotification({
-
       title: "Terminal",
-
-      message:
-        `Executed command: ${command}`,
-
+      message: `Executed command: ${rawCommand}`,
     })
   }
 
   return (
-
     <Window
       title="Terminal"
       closeWindow={() => closeWindow("terminal")}
       windowName="terminal"
     >
-
-      <div className="
-        bg-black
-        rounded-2xl
-        p-6
-        h-[500px]
-        overflow-y-auto
-        font-mono
-        border
-        border-green-500/20
-      ">
-
-        {/* HISTORY */}
+      <div className="bg-black rounded-2xl p-6 h-[500px] overflow-y-auto font-mono border border-green-500/20">
         <div className="space-y-3 mb-6">
-
-          {
-            history.map((line, index) => (
-
-              <pre
-                key={index}
-                className="
-                  text-green-400
-                  whitespace-pre-wrap
-                  leading-7
-                "
-              >
-
-                {line}
-
-              </pre>
-
-            ))
-          }
-
+          {history.map((line, index) => (
+            <pre
+              key={index}
+              className="text-green-400 whitespace-pre-wrap leading-7"
+            >
+              {line}
+            </pre>
+          ))}
         </div>
 
-        {/* INPUT */}
         <div className="flex items-center gap-3">
-
           <span className="text-green-400">
-
-            dharunika@mac ~
-
+            dharunika@mac
           </span>
 
-          <span className="text-purple-400">
-
-            $
-
-          </span>
+          <span className="text-purple-400">$</span>
 
           <input
-
             value={input}
-
-            onChange={(e) =>
-              setInput(e.target.value)
-            }
-
+            onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
-
               if (e.key === "Enter") {
-
                 runCommand(input)
-
                 setInput("")
               }
             }}
-
             autoFocus
-
             spellCheck={false}
-
-            className="
-              bg-transparent
-              outline-none
-              flex-1
-              text-green-400
-              caret-green-400
-            "
-
+            className="bg-transparent outline-none flex-1 text-green-400 caret-green-400"
           />
-
         </div>
-
       </div>
-
     </Window>
-
   )
 }
 
