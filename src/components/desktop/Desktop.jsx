@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
-
-import TopBar from "../topbar/TopBar"
+import TopBar from "../topBar/TopBar"
 import Dock from "../dock/Dock"
 import DesktopIcons from "./DesktopIcons"
 import BootScreen from "./BootScreen"
