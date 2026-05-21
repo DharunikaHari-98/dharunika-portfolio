@@ -22,39 +22,108 @@ function Dock() {
   const { openWindow, windows } = useWindowStore()
 
   const dockApps = [
-    { name: "about", icon: <FaUser size={34} color="white" /> },
-    { name: "finder", icon: <FaFolder size={34} color="white" /> },
-    { name: "terminal", icon: <FaTerminal size={34} color="white" /> },
-    { name: "safari", icon: <FaSafari size={34} color="white" /> },
-    { name: "vscode", icon: <VscCode size={34} color="white" /> },
-    { name: "github", icon: <FaGithub size={34} color="white" /> },
-    { name: "resume", icon: <FaFilePdf size={34} color="white" /> },
-    { name: "contact", icon: <FaEnvelope size={34} color="white" /> },
-    { name: "appstore", icon: <FaAppStore size={34} color="white" /> },
-    { name: "music", icon: <FaMusic size={34} color="white" /> },
-    { name: "notes", icon: <FaStickyNote size={34} color="white" /> },
-    { name: "weather", icon: <FaCloudSun size={34} color="white" /> },
-    { name: "calendar", icon: <FaCalendarAlt size={34} color="white" /> },
-    { name: "settings", icon: <FaCog size={34} color="white" /> },
+    {
+      name: "about",
+      icon: <FaUser size={28} />,
+      bg: "from-pink-500 to-purple-600",
+    },
+    {
+      name: "finder",
+      icon: <FaFolder size={30} />,
+      bg: "from-blue-400 to-blue-700",
+    },
+    {
+      name: "terminal",
+      icon: <FaTerminal size={28} />,
+      bg: "from-gray-700 to-black",
+    },
+    {
+      name: "safari",
+      icon: <FaSafari size={30} />,
+      bg: "from-cyan-400 to-blue-700",
+    },
+    {
+      name: "vscode",
+      icon: <VscCode size={30} />,
+      bg: "from-blue-500 to-cyan-500",
+    },
+    {
+      name: "github",
+      icon: <FaGithub size={30} />,
+      bg: "from-gray-800 to-gray-950",
+    },
+    {
+      name: "resume",
+      icon: <FaFilePdf size={28} />,
+      bg: "from-red-500 to-orange-600",
+    },
+    {
+      name: "contact",
+      icon: <FaEnvelope size={28} />,
+      bg: "from-green-400 to-emerald-700",
+    },
+    {
+      name: "appstore",
+      icon: <FaAppStore size={30} />,
+      bg: "from-sky-400 to-blue-700",
+    },
+    {
+      name: "music",
+      icon: <FaMusic size={28} />,
+      bg: "from-pink-500 to-red-600",
+    },
+    {
+      name: "notes",
+      icon: <FaStickyNote size={28} />,
+      bg: "from-yellow-300 to-yellow-600",
+    },
+    {
+      name: "weather",
+      icon: <FaCloudSun size={30} />,
+      bg: "from-blue-300 to-indigo-600",
+    },
+    {
+      name: "calendar",
+      icon: <FaCalendarAlt size={28} />,
+      bg: "from-red-400 to-pink-600",
+    },
+    {
+      name: "settings",
+      icon: <FaCog size={30} />,
+      bg: "from-gray-400 to-gray-700",
+    },
   ]
 
   return (
     <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50">
-      <div className="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-3xl px-8 py-4 flex gap-8 shadow-2xl">
+      <div className="bg-white/15 backdrop-blur-2xl border border-white/20 rounded-[2rem] px-6 py-3 flex gap-5 shadow-2xl">
         {dockApps.map((app) => (
           <div key={app.name} className="flex flex-col items-center">
             <motion.button
-              whileHover={{ scale: 1.4, y: -10 }}
-              whileTap={{ scale: 1.2 }}
-              transition={{ type: "spring", stiffness: 300 }}
+              whileHover={{ scale: 1.35, y: -12 }}
+              whileTap={{ scale: 1.15 }}
+              transition={{ type: "spring", stiffness: 350, damping: 18 }}
               onClick={() => openWindow(app.name)}
-              className="relative"
+              className={`
+                w-14
+                h-14
+                rounded-2xl
+                bg-gradient-to-br
+                ${app.bg}
+                flex
+                items-center
+                justify-center
+                text-white
+                shadow-xl
+                border
+                border-white/20
+              `}
             >
               {app.icon}
             </motion.button>
 
             {windows[app.name] && (
-              <div className="w-2 h-2 rounded-full bg-white mt-2"></div>
+              <div className="w-1.5 h-1.5 rounded-full bg-white mt-2"></div>
             )}
           </div>
         ))}
